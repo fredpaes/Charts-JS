@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Charts</title>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js?hcode=c11e6e3cfefb406e8ce8d99fa8368d33"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js?hcode=c11e6e3cfefb406e8ce8d99fa8368d33"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js?hcode=c11e6e3cfefb406e8ce8d99fa8368d33"></script>
+  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css?hcode=c11e6e3cfefb406e8ce8d99fa8368d33" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css?hcode=c11e6e3cfefb406e8ce8d99fa8368d33" type="text/css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div id="container1" style="width:100%; height:400px;"></div>
+  <br>
+  <div id="container2" style="width:100%; height:400px;"></div>
+  <br>
+  <canvas id="container3"></canvas>
+  <br>
+  <div id="container4" style="width:100%; height:400px;"></div>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/xrange.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+  <script>
+    const dows = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    const dataAPI = [
+      {
+        "id": 2,
+        "dow": 1,
+        "hora_inicio": "08:00",
+        "hora_fin": "18:00",
+        "activo": true
+      },
+      {
+        "id": 3,
+        "dow": 2,
+        "hora_inicio": "08:30",
+        "hora_fin": "16:00",
+        "activo": true
+      },
+      {
+        "id": 4,
+        "dow": 3,
+        "hora_inicio": "08:00",
+        "hora_fin": "18:00",
+        "activo": true
+      },
+      {
+        "id": 5,
+        "dow": 4,
+        "hora_inicio": "08:30",
+        "hora_fin": "16:00",
+        "activo": true
+      },
+      {
+        "id": 6,
+        "dow": 5,
+        "hora_inicio": "08:00",
+        "hora_fin": "18:00",
+        "activo": true
+      },
+      {
+        "id": 7,
+        "dow": 6,
+        "hora_inicio": "08:00",
+        "hora_fin": "13:00",
+        "activo": true
+      }
+    ]
+    const dataSimple = dataAPI.map(a=>([a.hora_inicio, a.hora_fin]))
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var myChart = Highcharts.chart('container1', {
+        chart: {
+          type: 'columnrange',
+          inverted: true
+        },
+        title: {
+          text: 'SCHEDULE 1'
+        },
+        xAxis: {
+          categories: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+        },
+        yAxis: {
+          title: {
+            text: 'Horas (HH:MM)'
+          }
+        },
+        plotOptions: {
+          columnrange: {
+              dataLabels: {
+                  enabled: true,
+                  format: '{y} H'
+              }
+          }
+        },
+        series: [{
+          name: 'Horarios',
+          data: [
+            [850,1800],
+            [0800, 1800],
+            [800, 1800],
+            [0800, 1800],
+            [800, 1800],
+            [0800, 1800]
+          ]
+        }]
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // let dataToShow = dataAPI.map(b => ({x:+(b.hora_inicio).replace(':','').replace(30,50), x2:+(b.hora_fin).replace(':','').replace(30,50), y:b.dow}))
+      let dataToShow = dataAPI.map(b => ({x:+(b.hora_inicio).replace(':',''), x2:+(b.hora_fin).replace(':',''), y:b.dow}))
+      // let dataToShow = dataAPI.map(b => ({x:b.hora_inicio, x2:b.hora_fin, y:b.dow}))
+      
+      var myChart = Highcharts.chart('container2', {
+        chart: {
+          type: 'xrange'
+        },
+        title: {
+          text: 'SCHEDULE 2'
+        },
+        xAxis: {
+          // type: 'category',
+          // categories: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"]
+          // categories: [8s, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+        },
+        yAxis: {
+          categories: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+          reversed: true,
+          title: { enabled: false }
+        },
+        series: [{
+          colorByPoint: false,
+          mouseOver: false,
+          name: 'Horas',
+          data: dataToShow
+        }],
+        tooltip: [{
+          enabled: false
+        }]
+      });
+    });
+
+    var ctx = document.getElementById('container3').getContext('2d');
+    var chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'horizontalBar',
+
+      // The data for our dataset
+      data: {
+          labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+          datasets: [{
+              label: 'SCHEDULE 3',
+              backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 99, 132)',
+              data: [5,6,7,3,4,5.5,4.5]
+          }]
+      },
+
+      // Configuration options go here
+      options: {}
+    });
+  
+    anychart.onDocumentReady(function () {
+      // create area series with passed data
+      let dataMap = dataAPI.map(b=>({low:+(b.hora_inicio).replace(':',''), high:+(b.hora_fin).replace(':',''), x:dows[b.dow]}))
+      var data = anychart.data.set(dataMap)
+
+      // create column chart
+      var chart = anychart.bar();
+
+      // set chart title text settings
+      chart.title('SCHEDULE 4');
+
+      var series = chart.rangeBar(data);
+      // set the selection color
+      series.selected()
+        .fill('navy 0.7')
+        .stroke('navy');
+
+      // set container id for the chart
+      chart.container('container4');
+      // initiate chart drawing
+      chart.draw();
+    });
+
+  </script>
+</body>
+
+</html>
